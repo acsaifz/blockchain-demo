@@ -31,7 +31,7 @@ public class BlockchainService {
     }
 
     private Block getGenesisBlock(){
-        return new Block(0,"",new ArrayList<Transaction>(),100);
+        return new Block(0,"",new TreeSet<>(),100);
     }
 
 }
