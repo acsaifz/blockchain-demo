@@ -2,12 +2,13 @@ package hu.acsaifz.blockchaindemo.service;
 
 import hu.acsaifz.blockchaindemo.entity.Block;
 import hu.acsaifz.blockchaindemo.entity.Transaction;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
+
 import java.util.Comparator;
-import java.util.Set;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import org.apache.commons.codec.digest.DigestUtils;
 
 @Service
 public class BlockchainService {
@@ -16,14 +17,15 @@ public class BlockchainService {
     private SortedSet<Transaction> openTransactions;
 
     public BlockchainService(){
-        this.blockchain = new TreeSet<>(Comparator.comparing(Block::getId));
+        this.blockchain = new TreeSet<>(Comparator.comparingLong(Block::getId));
         this.openTransactions = new TreeSet<>(Comparator.comparing(Transaction::getTime));
         addBlock(getGenesisBlock());
-        System.out.println("Blockchain létrehozva"); //csak tesztelés céljából van itt
     }
 
-    public Set<Block> getBlockchain() {
-        return Set.copyOf(blockchain);
+    public List<Block> getBlockchain() {
+        List<Block> copyOfBlockChain = new java.util.ArrayList<>(List.copyOf(blockchain));
+        copyOfBlockChain.sort((Block b1, Block b2) -> b2.getId() - b1.getId());
+        return copyOfBlockChain;
     }
 
     public Block getLastBlock(){
@@ -70,8 +72,7 @@ public class BlockchainService {
         String hashOfLastBlock = hashBlock(getLastBlock());
         String header = openTransactions.toString() + hashOfLastBlock + proof;
         String hash = DigestUtils.sha256Hex(header);
-        System.out.println(hash); // csak tesztelésre
-        return hash.startsWith("00");
+        return hash.startsWith("000");
     }
 
     private String hashBlock(Block block) {

@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.SortedSet;
 
 public class Block {
-    private final long id;
+    private final int id;
     private final String previousHash;
     private final SortedSet<Transaction> transactionList;
     private final LocalDateTime time;
     private final int proof;
 
-    public Block(long id, String previousHash, SortedSet<Transaction> transactionList, int proof) {
+    public Block(int id, String previousHash, SortedSet<Transaction> transactionList, int proof) {
         this.id = id;
         this.previousHash = previousHash;
         this.transactionList = transactionList;
@@ -19,7 +19,7 @@ public class Block {
         this.proof = proof;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
