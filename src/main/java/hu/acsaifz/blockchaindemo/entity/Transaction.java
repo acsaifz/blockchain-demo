@@ -36,4 +36,15 @@ public class Transaction {
     public LocalDateTime getTime() {
         return time;
     }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "sender='" + sender + '\'' +
+                ", recipient='" + recipient + '\'' +
+                ", amount=" + amount +
+                ", signature='" + signature + '\'' +
+                ", time=" + time +
+                '}';
+    }
 }

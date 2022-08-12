@@ -38,6 +38,7 @@ public class NodeController {
 
     @PostMapping("/mine")
     public String mine(){
+        blockchainService.mineBlock(walletService.getWallet().getAddress());
         return "redirect:/";
     }
 
