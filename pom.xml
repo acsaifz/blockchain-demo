@@ -16,6 +16,16 @@
     <properties>
         <java.version>18</java.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>HyperLedger</id>
+            <name>HyperLedger mvn repository</name>
+            <url>https://hyperledger.jfrog.io/artifactory/besu-maven/</url>
+        </repository>
+
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -31,11 +41,25 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hyperledger.besu.internal/core -->
         <dependency>
             <groupId>org.hyperledger.besu.internal</groupId>
             <artifactId>crypto</artifactId>
-            <version>22.1.3</version>
+            <version>22.4.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.hyperledger.besu</groupId>
+            <artifactId>besu-datatypes</artifactId>
+            <version>22.4.4</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>1.71</version>
+        </dependency>
+
     </dependencies>
 
     <build>

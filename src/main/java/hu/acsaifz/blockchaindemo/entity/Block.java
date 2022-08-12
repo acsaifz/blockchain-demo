@@ -2,15 +2,16 @@ package hu.acsaifz.blockchaindemo.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.SortedSet;
 
 public class Block {
     private final long id;
     private final String previousHash;
-    private final List<Transaction> transactionList;
+    private final SortedSet<Transaction> transactionList;
     private final LocalDateTime time;
     private final int proof;
 
-    public Block(long id, String previousHash, List<Transaction> transactionList, int proof) {
+    public Block(long id, String previousHash, SortedSet<Transaction> transactionList, int proof) {
         this.id = id;
         this.previousHash = previousHash;
         this.transactionList = transactionList;
