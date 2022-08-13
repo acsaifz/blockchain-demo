@@ -21,7 +21,6 @@ public class BlockchainService {
         this.blockchain = new TreeSet<>(Comparator.comparingLong(Block::getId));
         this.openTransactions = new TreeSet<>(Comparator.comparing(Transaction::getTime));
         addBlock(getGenesisBlock());
-        System.out.println(DigestUtils.sha256Hex(""));
     }
 
     public List<Block> getBlockchain() {
