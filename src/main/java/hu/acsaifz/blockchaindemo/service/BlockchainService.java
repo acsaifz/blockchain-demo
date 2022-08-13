@@ -13,7 +13,7 @@ import java.util.TreeSet;
 @Service
 public class BlockchainService {
     private static final int MINING_REWARD = 10;
-    private SortedSet<Block> blockchain;
+    private final SortedSet<Block> blockchain;
     private SortedSet<Transaction> openTransactions;
 
     public BlockchainService(){
@@ -72,7 +72,7 @@ public class BlockchainService {
         String hashOfLastBlock = hashBlock(getLastBlock());
         String header = openTransactions.toString() + hashOfLastBlock + proof;
         String hash = DigestUtils.sha256Hex(header);
-        return hash.startsWith("000");
+        return hash.startsWith("00000");
     }
 
     private String hashBlock(Block block) {
