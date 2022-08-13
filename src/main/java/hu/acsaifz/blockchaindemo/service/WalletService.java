@@ -50,7 +50,6 @@ public class WalletService {
         if (wallet == null) {
             KeyPair keyPair = secp256K1.generateKeyPair();
             wallet = new Wallet(keyPair);
-            KeyPairUtil.storeKeyFile(keyPair, Paths.get("./"));
         }
     }
 
