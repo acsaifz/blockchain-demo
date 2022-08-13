@@ -13,6 +13,7 @@ import java.util.TreeSet;
 @Service
 public class BlockchainService {
     private static final int MINING_REWARD = 10;
+    private static final String DIFFICULTY = "00";
     private final SortedSet<Block> blockchain;
     private SortedSet<Transaction> openTransactions;
 
@@ -20,6 +21,7 @@ public class BlockchainService {
         this.blockchain = new TreeSet<>(Comparator.comparingLong(Block::getId));
         this.openTransactions = new TreeSet<>(Comparator.comparing(Transaction::getTime));
         addBlock(getGenesisBlock());
+        System.out.println(DigestUtils.sha256Hex(""));
     }
 
     public List<Block> getBlockchain() {
@@ -95,7 +97,7 @@ public class BlockchainService {
     }
 
     private Block getGenesisBlock(){
-        return new Block(0,"",new TreeSet<>(),100);
+        return new Block(0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",new TreeSet<>(),100);
     }
 
     private int proofOfWork(){
@@ -111,7 +113,7 @@ public class BlockchainService {
         String hashOfLastBlock = hashBlock(getLastBlock());
         String header = openTransactions.toString() + hashOfLastBlock + proof;
         String hash = DigestUtils.sha256Hex(header);
-        return hash.startsWith("00");
+        return hash.startsWith(DIFFICULTY);
     }
 
     private String hashBlock(Block block) {
