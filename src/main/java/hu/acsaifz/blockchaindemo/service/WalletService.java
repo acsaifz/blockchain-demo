@@ -6,12 +6,15 @@ import org.apache.tuweni.bytes.Bytes;
 import org.apache.tuweni.bytes.Bytes32;
 import org.hyperledger.besu.crypto.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.annotation.SessionScope;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 
 import static org.hyperledger.besu.crypto.Hash.keccak256;
 
 @Service
+@SessionScope
 public class WalletService {
     private Wallet wallet;
     private final SECP256K1 secp256K1;
@@ -47,6 +50,7 @@ public class WalletService {
         if (wallet == null) {
             KeyPair keyPair = secp256K1.generateKeyPair();
             wallet = new Wallet(keyPair);
+            KeyPairUtil.storeKeyFile(keyPair, Paths.get("./"));
         }
     }
 

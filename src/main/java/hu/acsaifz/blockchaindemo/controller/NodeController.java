@@ -56,8 +56,6 @@ public class NodeController {
 
     @PostMapping("/transaction")
     public String sendTransaction(@ModelAttribute FormTransaction formTransaction){
-        System.out.println(formTransaction.getRecipient());
-        System.out.println(formTransaction.getAmount());
         blockchainService.addTransaction(walletService,formTransaction.getRecipient(),formTransaction.getAmount());
         return HOME_REDIRECT;
     }
