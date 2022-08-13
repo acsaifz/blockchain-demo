@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class WalletService {
     private Wallet wallet;
-    private static final SECP256K1 secp256K1 = new SECP256K1();
+    private final SECP256K1 secp256K1;
 
+    public WalletService() {
+        secp256K1 = new SECP256K1();
+    }
 
     public void generateWallet(){
         if (wallet == null) {
