@@ -1,26 +1,30 @@
 package hu.acsaifz.blockchaindemo.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import hu.acsaifz.blockchaindemo.entity.Block;
 import hu.acsaifz.blockchaindemo.entity.Transaction;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 @Service
 public class BlockchainService {
     private static final int MINING_REWARD = 10;
     private static final String DIFFICULTY = "00";
-    private final SortedSet<Block> blockchain;
+    private static final String BLOCKCHAIN_FILE_PATH = "blockchain.dat";
+    private static final String OPEN_TRANSACTIONS_FILE_PATH = "open_transactions.dat";
+    private SortedSet<Block> blockchain;
     private SortedSet<Transaction> openTransactions;
 
     public BlockchainService(){
-        this.blockchain = new TreeSet<>(Comparator.comparingLong(Block::getId));
-        this.openTransactions = new TreeSet<>(Comparator.comparing(Transaction::getTime));
-        addBlock(getGenesisBlock());
+        if ((!open() || blockchain.isEmpty()) && addBlock(getGenesisBlock())){
+            save(blockchain,BLOCKCHAIN_FILE_PATH);
+        }
     }
 
     public List<Block> getBlockchain() {
@@ -48,6 +52,7 @@ public class BlockchainService {
 
         if (amount < getBalance(sender) && walletService.verifyTransaction(transaction)){
             addTransaction(transaction);
+            save(openTransactions,OPEN_TRANSACTIONS_FILE_PATH);
             return true;
         }
 
@@ -63,6 +68,7 @@ public class BlockchainService {
             if(addBlock(block)){
                 System.out.println("Block found");
                 openTransactions = new TreeSet<>(Comparator.comparing(Transaction::getTime));
+                save(blockchain,BLOCKCHAIN_FILE_PATH);
             }else{
                 System.out.println("Mining failed");
             }
@@ -96,7 +102,7 @@ public class BlockchainService {
     }
 
     private Block getGenesisBlock(){
-        return new Block(0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",new TreeSet<>(),100);
+        return new Block(0,"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",new TreeSet<>(),0);
     }
 
     private int proofOfWork(){
@@ -117,6 +123,37 @@ public class BlockchainService {
 
     private String hashBlock(Block block) {
         return DigestUtils.sha256Hex(block.toString());
+    }
+
+    private <E> void save(SortedSet<E> data, String fileName){
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        try {
+            objectMapper.writeValue(new File(fileName), data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean open(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        File blockchainFile = new File(BLOCKCHAIN_FILE_PATH);
+        File openTransactionsFile = new File(OPEN_TRANSACTIONS_FILE_PATH);
+        try {
+            if (blockchainFile.exists() || blockchainFile.createNewFile()){
+                blockchain = objectMapper.readValue(blockchainFile, new TypeReference<TreeSet<Block>>() {});
+            }
+
+            if(openTransactionsFile.exists()) {
+                openTransactions = objectMapper.readValue(openTransactionsFile, new TypeReference<TreeSet<Transaction>>() {});
+            }else{
+                openTransactions = new TreeSet<>();
+            }
+            return true;
+        } catch (IOException e) {
+            throw new RuntimeException("Open files failed");
+        }
     }
 
 

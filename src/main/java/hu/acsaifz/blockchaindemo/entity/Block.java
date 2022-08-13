@@ -1,15 +1,21 @@
 package hu.acsaifz.blockchaindemo.entity;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.SortedSet;
 
-public class Block {
-    private final int id;
-    private final String previousHash;
-    private final SortedSet<Transaction> transactionList;
-    private final LocalDateTime time;
-    private final int proof;
+public class Block implements Comparable<Block>{
+    private int id;
+    private String previousHash;
+    private SortedSet<Transaction> transactionList;
+    private LocalDateTime time;
+    private int proof;
+
+    public Block(){
+
+    }
 
     public Block(int id, String previousHash, SortedSet<Transaction> transactionList, int proof) {
         this.id = id;
@@ -48,5 +54,34 @@ public class Block {
                 ", time=" + time +
                 ", proof=" + proof +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NotNull Block o) {
+        return id - o.getId();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Block block = (Block) o;
+
+        if (id != block.id) return false;
+        if (proof != block.proof) return false;
+        if (!previousHash.equals(block.previousHash)) return false;
+        if (!transactionList.equals(block.transactionList)) return false;
+        return time.equals(block.time);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + previousHash.hashCode();
+        result = 31 * result + transactionList.hashCode();
+        result = 31 * result + time.hashCode();
+        result = 31 * result + proof;
+        return result;
     }
 }
