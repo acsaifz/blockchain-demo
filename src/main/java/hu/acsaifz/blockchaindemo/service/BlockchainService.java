@@ -40,6 +40,19 @@ public class BlockchainService {
         return openTransactions.add(transaction);
     }
 
+    public boolean addTransaction(WalletService walletService, String recipient, double amount){
+        String sender = walletService.getWallet().getAddress();
+        String signature = walletService.signTransaction(recipient, amount);
+        Transaction transaction = new Transaction(sender,recipient,amount,signature);
+
+        if (amount < getBalance(sender) && walletService.verifyTransaction(transaction)){
+            addTransaction(transaction);
+            return true;
+        }
+
+        return false;
+    }
+
     public void mineBlock(String walletAddress){
         int proof = proofOfWork();
         Transaction transactionOfReward  = new Transaction("MINING", walletAddress,MINING_REWARD,"");
@@ -56,8 +69,8 @@ public class BlockchainService {
     }
 
     public double getBalance(String walletAddress){
-        float amountSent = 0;
-        float amountReceived = 0;
+        double amountSent = 0;
+        double amountReceived = 0;
 
         for (Block block: blockchain){
             if (block.getTransactionList() == null){
