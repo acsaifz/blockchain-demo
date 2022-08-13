@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
-
 import static org.hyperledger.besu.crypto.Hash.keccak256;
 
 @Service
