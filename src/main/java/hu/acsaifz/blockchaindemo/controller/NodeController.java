@@ -1,5 +1,6 @@
 package hu.acsaifz.blockchaindemo.controller;
 
+import hu.acsaifz.blockchaindemo.entity.Wallet;
 import hu.acsaifz.blockchaindemo.service.BlockchainService;
 import hu.acsaifz.blockchaindemo.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,15 @@ public class NodeController {
 
     @GetMapping("/")
     public String home(Model model){
+        Wallet wallet = walletService.getWallet();
+        double balance = 0.0;
+        if(wallet != null){
+            balance = blockchainService.getBalance(wallet.getAddress());
+        }
+
         model.addAttribute("blockchain", blockchainService.getBlockchain());
-        model.addAttribute("wallet", walletService.getWallet());
+        model.addAttribute("wallet", wallet);
+        model.addAttribute("balance", balance);
         return "index";
     }
 

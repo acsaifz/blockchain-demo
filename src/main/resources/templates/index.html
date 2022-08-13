@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>FoodCart</title>
+        <title>Blockchain</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="/assets/blockchain.png" />
         <!-- Bootstrap icons-->
@@ -17,7 +17,7 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="#!">Blockchain</a>
+                <a class="navbar-brand" href="#!">Blockchain Demo</a>
                 <!--<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
@@ -37,17 +37,30 @@
         <!-- Header-->
         <!-- Section-->
         <section class="pb-5">
-            <div class="container px-4 px-lg-5 mt-4">
-                <div th:if="${wallet == null}">
-                    <form th:action="@{/wallet}" method="post">
-                        <button>Create wallet</button>
-                    </form>
+            <div class="container px-4 px-lg-5 mt-4" th:if="${wallet == null}">
+                <div class="row" th:if="${wallet == null}">
+                    <div class="col">
+                        <form th:action="@{/wallet}" method="post">
+                            <button>Create wallet</button>
+                        </form>
+                    </div>
                 </div>
-                <div th:unless="${wallet == null}">
-                    <p th:text="${wallet.address}"></p>
-                    <form th:action="@{/mine}" method="post">
-                        <button>Mine</button>
-                    </form>
+            </div>
+            <div class="container px-4 px-lg-5 mt-4" th:unless="${wallet == null}">
+                <div class="row">
+                    <div class="col-auto">
+                        <h4>Wallet address: <span th:text="${wallet.address}"></span></h4>
+                    </div>
+                    <div class="col" style="text-align: right">
+                        <h4 class="">Your balance: <span th:text="${balance}">0</span></h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <form th:action="@{/mine}" method="post">
+                            <button>Mine</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div class="container px-4 px-lg-5 mt-4">
@@ -62,7 +75,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="block: ${blockchain}">
+                        <tr  th:each="block: ${blockchain}">
                             <td th:text="${block.id}"></td>
                             <td th:text="${block.previousHash}"></td>
                             <td th:text="${block.transactionList.size()}"></td>

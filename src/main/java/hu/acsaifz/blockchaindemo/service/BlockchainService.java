@@ -55,6 +55,32 @@ public class BlockchainService {
         }
     }
 
+    public double getBalance(String walletAddress){
+        float amountSent = 0;
+        float amountReceived = 0;
+
+        for (Block block: blockchain){
+            if (block.getTransactionList() == null){
+                continue;
+            }
+            for (Transaction transaction: block.getTransactionList()){
+                if (transaction.getSender().equals(walletAddress)){
+                    amountSent += transaction.getAmount();
+                }
+                if (transaction.getRecipient().equals(walletAddress)){
+                    amountReceived += transaction.getAmount();
+                }
+            }
+        }
+
+        for(Transaction transaction: openTransactions){
+            if (transaction.getSender().equals(walletAddress)){
+                amountSent += transaction.getAmount();
+            }
+        }
+        return amountReceived - amountSent;
+    }
+
     private Block getGenesisBlock(){
         return new Block(0,"",new TreeSet<>(),100);
     }
@@ -72,7 +98,7 @@ public class BlockchainService {
         String hashOfLastBlock = hashBlock(getLastBlock());
         String header = openTransactions.toString() + hashOfLastBlock + proof;
         String hash = DigestUtils.sha256Hex(header);
-        return hash.startsWith("00000");
+        return hash.startsWith("00");
     }
 
     private String hashBlock(Block block) {
