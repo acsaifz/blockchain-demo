@@ -141,8 +141,10 @@ public class BlockchainService {
         File blockchainFile = new File(BLOCKCHAIN_FILE_PATH);
         File openTransactionsFile = new File(OPEN_TRANSACTIONS_FILE_PATH);
         try {
-            if (blockchainFile.exists() || blockchainFile.createNewFile()){
+            if (blockchainFile.exists()){
                 blockchain = objectMapper.readValue(blockchainFile, new TypeReference<TreeSet<Block>>() {});
+            } else {
+                blockchain = new TreeSet<>();
             }
 
             if(openTransactionsFile.exists()) {
@@ -152,9 +154,8 @@ public class BlockchainService {
             }
             return true;
         } catch (IOException e) {
+            e.printStackTrace();
             throw new RuntimeException("Open files failed");
         }
     }
-
-
 }
